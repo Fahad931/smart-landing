@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartLanding - Landing Page Generator</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+
+</head>
+<body>
+  <header>
+    <h1>SmartLanding</h1>
+    <p>Generate a landing page for your business in seconds</p>
+  </header>
+
+  <main>
+    <section id="form-section">
+      <h2>Enter Your Business Info</h2>
+      <form id="landingForm">
+        <label>Business Name: <input type="text" id="bizName" required /></label>
+        <label>Description: <textarea id="bizDesc" required></textarea></label>
+        <label>Services (comma-separated): <input type="text" id="bizServices" required /></label>
+        <label>Contact Email: <input type="email" id="bizEmail" required /></label>
+        <button type="submit">Generate Landing Page</button>
+      </form>
+    </section>
+
+    <section id="preview-section">
+      <h2>Preview</h2>
+      <div id="preview"></div>
+      <button id="downloadBtn" style="display:none;">Download Landing Page</button>
+    </section>
+   
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

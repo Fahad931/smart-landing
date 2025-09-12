@@ -1,0 +1,167 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  body {
+    background-color: #f8f9fa;
+    padding: 20px;
+    color: #333;
+  }
+  
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto 40px;
+  }
+  
+  form input, form textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  form button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background-color: #0056b3;
+  }
+  
+  #preview-section {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  #preview {
+    border: 1px solid #ccc;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+  }
+  
+  #preview form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  #preview form input,
+  #preview form textarea {
+    padding: 10px;
+    font-size: 15px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+  }
+  
+  #preview form button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  #preview form button:hover {
+    background-color: #218838;
+  }
+  
+  /* --- Landing Page Layout --- */
+.landing-page {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+  }
+  
+  /* Hero Section */
+  .hero {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .biz-title {
+    font-size: 2.5rem;
+    color: #333;
+  }
+  
+  .biz-desc {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 10px;
+  }
+  
+  /* Services Section */
+  .services h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .services ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .services ul li {
+    background: #e9ecef;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  /* Contact Section */
+  .contact {
+    margin-top: 30px;
+  }
+  
+  .contact h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .contact form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .contact input,
+  .contact textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .contact button {
+    background-color: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .contact button:hover {
+    background-color: #0056b3;
+  }
+  
