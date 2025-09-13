@@ -2,42 +2,72 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SmartLanding - Landing Page Generator</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Smart Landing Page Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   
-
+  <!-- FontAwesome for icons -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    rel="stylesheet"
+  />
+  
+  <!-- Your CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <h1>SmartLanding</h1>
-    <p>Generate a landing page for your business in seconds</p>
-  </header>
+  <div class="container">
+    <aside class="sidebar">
+      <h2>Landing Page Generator</h2>
+      
+      <label for="theme">Choose Theme:</label>
+      <select id="theme">
+        <option value="light" selected>Light</option>
+        <option value="dark">Dark</option>
+        <option value="blue">Blue</option>
+      </select>
 
-  <main>
-    <section id="form-section">
-      <h2>Enter Your Business Info</h2>
-      <form id="landingForm">
-        <label>Business Name: <input type="text" id="bizName" required /></label>
-        <label>Description: <textarea id="bizDesc" required></textarea></label>
-        <label>Services (comma-separated): <input type="text" id="bizServices" required /></label>
-        <label>Contact Email: <input type="email" id="bizEmail" required /></label>
-        <button type="submit">Generate Landing Page</button>
-      </form>
-    </section>
+      <fieldset>
+        <legend>Toggle Sections</legend>
+        <label><input type="checkbox" id="toggleHero" checked /> Welcome Section</label>
+        <label><input type="checkbox" id="toggleServices" checked /> Services Section</label>
+        <label><input type="checkbox" id="toggleContact" checked /> Contact Section</label>
+      </fieldset>
 
-    <section id="preview-section">
+      <label for="businessName">Business Name:</label>
+      <input type="text" id="businessName" placeholder="Business Name" />
+
+      <label for="description">Short Description:</label>
+      <textarea id="description" placeholder="Short description..."></textarea>
+
+      <label for="services">Services (comma separated):</label>
+      <input type="text" id="services" placeholder="Web Design, SEO, Marketing" />
+
+      <label for="logoUpload">Upload Logo (max 2MB):</label>
+      <input type="file" id="logoUpload" accept="image/*" />
+      <img id="logoPreview" alt="Logo Preview" style="display:none; max-width:100%; margin-top:10px;" />
+
+      <fieldset>
+        <legend>Customize Colors (optional)</legend>
+        <label for="colorBg">Background Color:</label>
+        <input type="color" id="colorBg" />
+        <label for="colorText">Text Color:</label>
+        <input type="color" id="colorText" />
+        <label for="colorPrimary">Primary Color:</label>
+        <input type="color" id="colorPrimary" />
+      </fieldset>
+
+      <label><input type="checkbox" id="mobilePreview" /> Mobile Preview</label>
+
+      <button id="saveBtn">Save Template</button>
+      <button id="loadBtn">Load Template</button>
+      <button id="downloadBtn" disabled>Download Landing Page</button>
+    </aside>
+
+    <main class="preview-container">
       <h2>Preview</h2>
       <div id="preview"></div>
-      <button id="downloadBtn" style="display:none;">Download Landing Page</button>
-    </section>
-   
-
-  </main>
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
