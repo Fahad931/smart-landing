@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Theme Sync Test — Landing Page Generator</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    /* ===== Theme variables (JS will update these) ===== */
+    :root {
+      --bg-color: #f8f9fa;
+      --text-color: #333333;
+      --primary-color: #007bff;
+    }
+
+    /* ===== Layout ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #eef2f6; color: #222; }
+    .container { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 320px;
+      padding: 18px;
+      background: #fff;
+      border-right: 1px solid #ddd;
+    }
+    .sidebar h2 { color: var(--primary-color); margin-bottom: 12px; }
+    .sidebar label { display:block; margin-top:10px; font-weight:600; font-size:0.95rem;}
+    .sidebar input[type="text"], .sidebar textarea, .sidebar select, .sidebar input[type="color"] {
+      width:100%; padding:8px; margin-top:6px; border:1px solid #ccc; border-radius:6px;
+    }
+    .sidebar textarea { min-height:60px; resize:vertical; }
+    .sidebar button { margin-top:12px; padding:10px; width:100%; background:var(--primary-color); color:#fff; border:none; border-radius:6px; cursor:pointer; }
+
+    /* Preview area */
+    .preview-container { flex:1; padding:20px; }
+    #preview-frame { border:1px solid #ccc; border-radius:10px; padding:20px; min-height:400px; background:transparent; box-shadow:0 4px 12px rgba(0,0,0,0.06); }
+    #preview-frame.mobile { max-width:390px; margin:auto; border-radius:24px; padding:14px; box-shadow:0 8px 30px rgba(0,0,0,0.18); }
+
+    /* Landing page (uses CSS variables) */
+    .landing-page {
+      max-width:800px;
+      margin:0 auto;
+      background: var(--bg-color);
+      color: var(--text-color);
+      border-radius:10px;
+      padding:26px;
+      text-align:center;
+    }
+    .landing-page h1, .landing-page h2 { color: var(--primary-color); margin-bottom:12px; }
+    .landing-page p { margin-bottom:14px; font-size:1.05rem; }
+    .landing-page ul { text-align:left; display:inline-block; padding-left:18px; margin:0 auto; }
+    .landing-page ul li { margin-bottom:8px; }
+
+    .landing-page .contact form { max-width:520px; margin: 10px auto 0; text-align:left; }
+    .landing-page .contact form input, .landing-page .contact form textarea {
+      width:100%; padding:10px; margin-bottom:10px; border-radius:6px; border:1px solid var(--primary-color);
+    }
+    .landing-page .contact form button { background:var(--primary-color); color:#fff; padding:10px 16px; border-radius:6px; border:none; cursor:pointer; }
+
+    /* Responsive */
+    @media (max-width:760px) {
+      .container { flex-direction:column; }
+      .sidebar { width:100%; border-right:none; border-bottom:1px solid #ddd; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <aside class="sidebar">
+    <h2>Landing Page Generator</h2>
+
+    <label for="theme">Theme</label>
+    <select id="theme">
+      <option value="light" selected>Light</option>
+      <option value="dark">Dark</option>
+      <option value="blue">Blue</option>
+    </select>
+
+    <label><input type="checkbox" id="toggleHero" checked /> Show Hero</label>
+    <label><input type="checkbox" id="toggleServices" checked /> Show Services</label>
+    <label><input type="checkbox" id="toggleContact" checked /> Show Contact</label>
+
+    <label for="businessName">Business Name</label>
+    <input id="businessName" type="text" placeholder="Your Business Name" />
+
+    <label for="desc">Short description</label>
+    <textarea id="desc" placeholder="Short description..."></textarea>
+
+    <label for="services">Services (comma separated)</label>
+    <input id="services" type="text" placeholder="Web design, SEO" />
+
+    <label for="logoUpload">Logo (max 2MB)</label>
+    <input id="logoUpload" type="file" accept="image/*" />
+    <img id="logoPreview" alt="logo preview" style="display:none; max-width:100%; margin-top:8px;" />
+
+    <fieldset style="margin-top:10px; padding:10px;">
+      <legend style="font-weight:600">Customize Colors</legend>
+      <label for="colorBg">Background</label>
+      <input id="colorBg" type="color" />
+      <label for="colorText">Text</label>
+      <input id="colorText" type="color" />
+      <label for="colorPrimary">Primary</label>
+      <input id="colorPrimary" type="color" />
+    </fieldset>
+
+    <label style="margin-top:8px"><input id="mobilePreview" type="checkbox" /> Mobile preview</label>
+
+    <button id="saveBtn">Save</button>
+    <button id="loadBtn">Load</button>
+    <button id="downloadBtn" disabled>Download</button>
+  </aside>
+
+  <main class="preview-container">
+    <h2>Preview</h2>
+    <div id="preview-frame"><div id="preview"></div></div>
+  </main>
+</div>
+
+<script>
+  /* ===== Developer token (hybrid). Replace with your token if you use FormSubmit. ===== */
+  const FORMSUBMIT_TOKEN = "YOUR_FIXED_TOKEN_HERE";
+
+  /* === DOM elements === */
+  const themeSelect = document.getElementById('theme');
+  const toggleHero = document.getElementById('toggleHero');
+  const toggleServices = document.getElementById('toggleServices');
+  const toggleContact = document.getElementById('toggleContact');
+  const businessName = document.getElementById('businessName');
+  const desc = document.getElementById('desc');
+  const servicesInput = document.getElementById('services');
+  const logoUpload = document.getElementById('logoUpload');
+  const logoPreview = document.getElementById('logoPreview');
+
+  const colorBg = document.getElementById('colorBg');
+  const colorText = document.getElementById('colorText');
+  const colorPrimary = document.getElementById('colorPrimary');
+
+  const mobilePreview = document.getElementById('mobilePreview');
+  const preview = document.getElementById('preview');
+  const previewFrame = document.getElementById('preview-frame');
+
+  const saveBtn = document.getElementById('saveBtn');
+  const loadBtn = document.getElementById('loadBtn');
+  const downloadBtn = document.getElementById('downloadBtn');
+
+  let logoDataURL = "";
+
+  /* === base theme presets (JS) === */
+  const baseThemes = {
+    light: { bg: "#f8f9fa", text: "#333333", primary: "#007bff" },
+    dark:  { bg: "#222222", text: "#f1f1f1", primary: "#ff5722" },
+    blue:  { bg: "#e8f1fb", text: "#0d1b2a", primary: "#1e88e5" }
+  };
+
+  /* Utility */
+  const esc = s => {
+    const d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+  };
+
+  /* Set color inputs to the chosen theme's defaults (and update CSS vars) */
+  function setColorPickersFromTheme(theme) {
+    const t = baseThemes[theme] || baseThemes.light;
+    colorBg.value = t.bg;
+    colorText.value = t.text;
+    colorPrimary.value = t.primary;
+    applyTheme(theme, { bg: t.bg, text: t.text, primary: t.primary });
+  }
+
+  /* Update CSS variables on :root */
+  function applyTheme(theme, custom = {}) {
+    const root = document.documentElement;
+    const chosen = baseThemes[theme] || baseThemes.light;
+    const bg = custom.bg || chosen.bg;
+    const text = custom.text || chosen.text;
+    const primary = custom.primary || chosen.primary;
+    root.style.setProperty('--bg-color', bg);
+    root.style.setProperty('--text-color', text);
+    root.style.setProperty('--primary-color', primary);
+  }
+
+  /* Build preview HTML and render */
+  function updatePreview() {
+    // ensure theme vars are applied (use current theme + custom color inputs)
+    const theme = themeSelect.value;
+    applyTheme(theme, {
+      bg: colorBg.value || undefined,
+      text: colorText.value || undefined,
+      primary: colorPrimary.value || undefined
+    });
+
+    // hero
+    const heroHtml = toggleHero.checked ? `
+      <section class="hero">
+        ${logoDataURL ? `<img src="${logoDataURL}" alt="logo" style="max-width:140px;margin-bottom:12px;">` : ''}
+        <h1>${esc(businessName.value || 'Your Business')}</h1>
+        <p>${esc(desc.value || 'Short description...')}</p>
+      </section>` : '';
+
+    // services
+    const servicesList = servicesInput.value.split(',').map(s=>s.trim()).filter(Boolean)
+      .map(s => `<li>${esc(s)}</li>`).join('') || '<li>Service 1</li><li>Service 2</li>';
+    const servicesHtml = toggleServices.checked ? `<section class="services"><h2>Our Services</h2><ul>${servicesList}</ul></section>` : '';
+
+    // contact (uses hybrid token)
+    const contactHtml = toggleContact.checked ? `
+      <section class="contact">
+        <h2>Contact Us</h2>
+        <form action="https://formsubmit.co/${FORMSUBMIT_TOKEN}" method="POST">
+          <input type="text" name="name" placeholder="Your Name" required />
+          <input type="email" name="email" placeholder="Your Email" required />
+          <textarea name="message" placeholder="Your Message" required></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </section>` : '';
+
+    preview.innerHTML = `<div class="landing-page">${heroHtml}${servicesHtml}${contactHtml}</div>`;
+
+    // mobile frame toggle: add class to the frame, not the inner preview container
+    previewFrame.classList.toggle('mobile', mobilePreview.checked);
+
+    // enable download when there's content
+    downloadBtn.disabled = preview.innerHTML.trim() === '';
+  }
+
+  /* Logo upload */
+  logoUpload.addEventListener('change', () => {
+    const f = logoUpload.files[0];
+    if (!f) return;
+    if (!f.type.startsWith('image/')) { alert('Upload image only'); logoUpload.value=''; return; }
+    if (f.size > 2*1024*1024) { alert('Max 2MB'); logoUpload.value=''; return; }
+    const r = new FileReader();
+    r.onload = e => { logoDataURL = e.target.result; logoPreview.src = logoDataURL; logoPreview.style.display = 'block'; updatePreview(); };
+    r.readAsDataURL(f);
+  });
+
+  /* Save/Load (localStorage) */
+  saveBtn.addEventListener('click', () => {
+    const data = {
+      theme: themeSelect.value,
+      hero: toggleHero.checked,
+      services: toggleServices.checked,
+      contact: toggleContact.checked,
+      businessName: businessName.value,
+      desc: desc.value,
+      servicesList: servicesInput.value,
+      colors: { bg: colorBg.value, text: colorText.value, primary: colorPrimary.value },
+      logo: logoDataURL
+    };
+    localStorage.setItem('lp_template', JSON.stringify(data));
+    alert('Saved.');
+  });
+
+  loadBtn.addEventListener('click', () => {
+    const raw = localStorage.getItem('lp_template');
+    if (!raw) return alert('No saved template.');
+    const d = JSON.parse(raw);
+    themeSelect.value = d.theme || 'light';
+    toggleHero.checked = !!d.hero;
+    toggleServices.checked = !!d.services;
+    toggleContact.checked = !!d.contact;
+    businessName.value = d.businessName || '';
+    desc.value = d.desc || '';
+    servicesInput.value = d.servicesList || '';
+    colorBg.value = d.colors?.bg || '';
+    colorText.value = d.colors?.text || '';
+    colorPrimary.value = d.colors?.primary || '';
+    logoDataURL = d.logo || '';
+    if (logoDataURL) { logoPreview.src = logoDataURL; logoPreview.style.display='block'; } else { logoPreview.style.display='none'; }
+    applyTheme(themeSelect.value, { bg: colorBg.value, text: colorText.value, primary: colorPrimary.value });
+    updatePreview();
+  });
+
+  /* Download - freezes current CSS variable values into generated page */
+  downloadBtn.addEventListener('click', () => {
+    const root = getComputedStyle(document.documentElement);
+    const bg = root.getPropertyValue('--bg-color').trim() || '#f8f9fa';
+    const txt = root.getPropertyValue('--text-color').trim() || '#333';
+    const pri = root.getPropertyValue('--primary-color').trim() || '#007bff';
+
+    const content = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${(businessName.value || 'Landing Page')}</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--bg-color:${bg};--text-color:${txt};--primary-color:${pri}}
+body{font-family:Arial,sans-serif;margin:0;background:var(--bg-color);color:var(--text-color)}
+.landing-page{max-width:900px;margin:40px auto;padding:24px;background:var(--bg-color);color:var(--text-color);border-radius:10px;text-align:center}
+.landing-page h1,.landing-page h2{color:var(--primary-color)}
+.landing-page .contact form input, .landing-page .contact form textarea{width:100%;padding:10px;margin-bottom:10px;border:1px solid var(--primary-color);border-radius:6px}
+.landing-page .contact form button{background:var(--primary-color);color:#fff;padding:10px 16px;border:none;border-radius:6px;cursor:pointer}
+</style></head><body>
+${preview.innerHTML}
+</body></html>`;
+
+    const blob = new Blob([content], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'landing-page.html'; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  /* Event wiring */
+  // Changing theme should set the pickers and apply variables
+  themeSelect.addEventListener('change', () => {
+    setColorPickersFromTheme(themeSelect.value);
+    updatePreview();
+  });
+
+  // Color pickers override theme
+  [colorBg, colorText, colorPrimary].forEach(inp => inp.addEventListener('input', () => {
+    applyTheme(themeSelect.value, { bg: colorBg.value, text: colorText.value, primary: colorPrimary.value });
+    updatePreview();
+  }));
+
+  // other inputs update preview
+  [toggleHero, toggleServices, toggleContact, businessName, desc, servicesInput, mobilePreview].forEach(el => {
+    el.addEventListener('input', updatePreview);
+  });
+
+  // init
+  (function init() {
+    setColorPickersFromTheme(themeSelect.value);
+    updatePreview();
+  })();
+</script>
+</body>
+</html>
