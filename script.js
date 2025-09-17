@@ -29,7 +29,7 @@ const logoPreview = document.getElementById("logoPreview");
 const colorBg = document.getElementById("colorBg");
 const colorText = document.getElementById("colorText");
 const colorPrimary = document.getElementById("colorPrimary");
-
+s
 const mobilePreviewToggle = document.getElementById("mobilePreview");
 
 const preview = document.getElementById("preview");
